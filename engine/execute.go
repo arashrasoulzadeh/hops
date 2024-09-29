@@ -1,21 +1,22 @@
-package main
+package engine
 
 import (
     "log"
     lua "github.com/yuin/gopher-lua"
 )
 
-// executeFunction executes a Lua function
-func executeFunction(function *lua.LFunction) {
+func ExecuteFunction(function *lua.LFunction, args ...lua.LValue) error {
     l := lua.NewState()
     defer l.Close()
 
-    // Call the Lua function
+    // Ensure the function is protected and pass the arguments
     if err := l.CallByParam(lua.P{
         Fn:      function,
         NRet:    0,
         Protect: true,
-    }); err != nil {
+    }, args...); err != nil {
         log.Fatalf("Error executing function: %v\n", err)
+        return err
     }
+    return nil
 }

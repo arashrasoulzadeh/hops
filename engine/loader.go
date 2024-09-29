@@ -1,7 +1,6 @@
-package main
+package engine
 
 import (
-    "fmt"
     lua "github.com/yuin/gopher-lua"
     "io/ioutil"
     "log"
@@ -15,7 +14,7 @@ func LoadPath(folder string) {
     defer l.Close()
 
     // Create a sub-map for the folder
-    functionMap[folder] = make(map[string]*lua.LFunction)
+    FunctionMap[folder] = make(map[string]*lua.LFunction)
 
     // Initialize metadata for the folder
     meta := LuaMetadata{
@@ -51,8 +50,7 @@ func LoadPath(folder string) {
                 tbl.ForEach(func(key lua.LValue, value lua.LValue) {
                     if fn, ok := value.(*lua.LFunction); ok {
                         funcName := key.String()
-                        functionMap[folder][funcName] = fn
-                        log.Println(fmt.Sprintf("Added function: %s (from folder: %s)\n", funcName, folder))
+                        FunctionMap[folder][funcName] = fn
                     }
                 })
             }
@@ -60,5 +58,5 @@ func LoadPath(folder string) {
     }
 
     // After processing all files, update the global luaMetaMap for this folder
-    luaMetaMap[folder] = meta
+    LuaMetaMap[folder] = meta
 }
