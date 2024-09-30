@@ -12,6 +12,7 @@ import (
 func main() {
     engine.LoadPath("modules/intro")
     engine.LoadPath("modules/nginx")
+    engine.LoadPath("modules/os")
 
     // Print collected metadata (functions, comments, variables)
     totalFunctions := 0
