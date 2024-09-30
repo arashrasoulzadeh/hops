@@ -26,7 +26,7 @@ var runCmd = &cobra.Command{
         functionName := args[1]
 
         // Check if the module exists
-        pkg, ok := engine.FunctionMap[moduleName]
+        pkg, ok := engine.FunctionMap["modules/"+moduleName]
         if !ok {
             fmt.Printf("Error: module '%s' not found.\n", moduleName)
             return

@@ -23,7 +23,7 @@ Clone the repository and run the `run` command with your Lua script and function
 ```bash
 git clone <repo-url>
 cd <repo-folder>
-go run . run modules/nginx restart
+go run . run module_name module_function
 ```
 
 ## Usage
