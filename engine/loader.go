@@ -20,6 +20,7 @@ func LoadPath(folder string) {
     meta := LuaMetadata{
         Functions: make(map[string]string),
         Variables: make(map[string]string),
+        Comments:  make(map[string]string),
     }
 
     // Load Lua files and collect functions, comments, and variables

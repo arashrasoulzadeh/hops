@@ -1,7 +1,3 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
-
 package cmd
 
 import (
@@ -17,20 +13,36 @@ var runCmd = &cobra.Command{
     Short: "Run a module command",
     Long:  `This command will run a specified function from a given module.`,
     Run: func(cmd *cobra.Command, args []string) {
-        if len(args) < 2 {
+        if len(args) < 1 {
             fmt.Println("Error: module and function name are required.")
             return
         }
 
         moduleName := args[0]
-        functionName := args[1]
 
+        path := "modules/" + moduleName
         // Check if the module exists
-        pkg, ok := engine.FunctionMap["modules/"+moduleName]
+        pkg, ok := engine.FunctionMap[path]
         if !ok {
             fmt.Printf("Error: module '%s' not found.\n", moduleName)
             return
         }
+        meta, ok := engine.LuaMetaMap["modules/"+moduleName]
+        if !ok {
+            fmt.Printf("Error: module '%s' not found.\n", moduleName)
+            return
+        }
+
+        // If the function name is not provided, list available functions
+        if len(args) < 2 {
+            fmt.Printf("Functions available in module '%s':\n", moduleName)
+            for functionName := range pkg {
+                fmt.Println(functionName, "\t:", meta.Comments[functionName])
+            }
+            return
+        }
+
+        functionName := args[1]
 
         // Check if the function exists within the module
         f, ok := pkg[functionName]

@@ -36,8 +36,14 @@ func collectLuaMetadata(filePath string, metadata *LuaMetadata) {
         // Check for function declarations
         if matches := funcPattern.FindStringSubmatch(line); matches != nil {
             currentFunction = matches[2] // Get the function name
+
+            // Store the comment in metadata for this function
             metadata.Functions[currentFunction] = lastComment
-            lastComment = "" // Reset comment after it's assigned
+
+            // Store the comment in Comments for this function
+            metadata.Comments[currentFunction] = lastComment
+
+            lastComment = "" // Reset the comment after it's assigned
             continue
         }
 
