@@ -5,8 +5,13 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"hops/cmd"
 	"hops/engine"
+	"os"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 //go:embed modules
@@ -24,7 +29,24 @@ func main() {
 			totalFunctions++
 		}
 	}
-	//    log.Println(fmt.Sprintf("loaded %d modules and %d functions", len(engine.LuaMetaMap), totalFunctions))
+
+	// Create a file append logger
+	file, _ := os.OpenFile("log.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+
+	// Create a encoder
+	encoderConfig := zap.NewProductionEncoderConfig()
+	encoder := zapcore.NewJSONEncoder(encoderConfig)
+
+	// Create a file logger
+	core := zapcore.NewCore(encoder, zapcore.AddSync(file), zapcore.DebugLevel)
+	logger := zap.New(core)
+
+	defer logger.Sync()
+
+	// Replace the global logger with the file logger
+	zap.ReplaceGlobals(logger)
+
+	zap.L().Debug(fmt.Sprintf("loaded %d modules and %d functions", len(engine.LuaMetaMap), totalFunctions))
 
 	cmd.Execute()
 }
