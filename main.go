@@ -20,7 +20,7 @@ func main() {
 	// Print collected metadata (functions, comments, variables)
 	totalFunctions := 0
 	for _, meta := range engine.LuaMetaMap {
-		for _ = range meta.Functions {
+		for range meta.Functions {
 			totalFunctions++
 		}
 	}
