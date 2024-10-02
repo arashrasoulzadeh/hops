@@ -1,4 +1,4 @@
--- restart nginx server: restart
+-- restart nginx server
 function restart()
     -- Determine the operating system
     local os_name = package.config:sub(1,1) == '\\' and "windows" or "unix"
