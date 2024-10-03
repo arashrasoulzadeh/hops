@@ -54,5 +54,6 @@ deb:
 clean:
 	@echo "Cleaning up..."
 	rm -rf build_temp_* $(BUILD_DIR)
+	rm -rf hops_* $(BUILD_DIR)
 
 .PHONY: all build deb debs clean
