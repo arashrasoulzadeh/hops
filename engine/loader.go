@@ -2,6 +2,7 @@ package engine
 
 import (
 	"embed"
+	"hops/renderer"
 	"log"
 	"path/filepath"
 	"strings"
@@ -24,6 +25,8 @@ func LoadPath(fs embed.FS, folder string) {
 		Comments:  make(map[string]string),
 	}
 
+	r := renderer.NewRenderer()
+
 	// Read the directory using embed.FS
 	files, err := fs.ReadDir(folder)
 	if err != nil {
@@ -44,9 +47,14 @@ func LoadPath(fs embed.FS, folder string) {
 			if err != nil {
 				log.Fatalf("Error reading %s: %v\n", filePath, err)
 			}
+			// Render content of file , eg replace place holders , this does not compile lua
+			rendered_content, err := r.Render(content)
+			if err != nil {
+				log.Fatalf("Error rendering %s: %v\n", filePath, err)
+			}
 
 			// Run the Lua script from the file content
-			if err := l.DoString(string(content)); err != nil {
+			if err := l.DoString(string(rendered_content)); err != nil {
 				log.Fatalf("Error loading %s: %v\n", filePath, err)
 			}
 

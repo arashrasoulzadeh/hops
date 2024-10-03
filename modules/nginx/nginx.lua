@@ -1,10 +1,8 @@
 -- restart nginx server
 function restart()
-    -- Determine the operating system
-    local os_name = package.config:sub(1,1) == '\\' and "windows" or "unix"
 
     local command = ""
-    if os_name == "windows" then
+    if "{{os.Name}}" == "windows" then
         -- Windows command (assuming you're using a Windows service manager)
         command = "net stop nginx && net start nginx"
     else

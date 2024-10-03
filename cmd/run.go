@@ -11,6 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 	lua "github.com/yuin/gopher-lua"
+	"go.uber.org/zap"
 )
 
 // runCmd represents the run command
@@ -76,10 +77,12 @@ var runCmd = &cobra.Command{
 		for {
 
 			// Execute the function
-			err = engine.ExecuteFunction(f, a1)
+			response, err := engine.ExecuteFunction(f, a1)
 			if err != nil {
 				fmt.Printf("Error executing function: %v\n", err)
 			}
+
+			zap.L().Debug(response)
 
 			// If 'watch' mode is not enabled, break after the first run
 			if !watch {
