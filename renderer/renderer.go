@@ -19,7 +19,10 @@ type DefaultRenderer struct {
 func NewRenderer() Renderer {
 	r := &DefaultRenderer{
 		funcMap: template.FuncMap{
-			"os": func() *osInfo { return newOSInfo() }, // Registering os as a function that returns osInfo
+			"os":       func() *osInfo { return newOSInfo() },
+			"hardware": func() *HardwareInfo { return NewHardwareInfo() },
+			"network":  func() *NetworkInfo { return NewNetworkInfo() },
+			"user":     func() *UserInfo { return NewUserInfo() },
 		},
 	}
 	return r
