@@ -19,11 +19,11 @@ all: debs
 build:
 	@echo "Compiling Go binaries for architectures..."
 	@for arch in $(ARCHS); do \
-		GOARCH=$$arch GOOS=linux go build -o build_temp_$$arch; \
+		GOARCH=$$arch GOOS=linux go build -o hops_$$arch; \
 	done
 	@if [ "$(UNAME_S)" = "Darwin" ]; then \
 		echo "Compiling Go binary for macOS..."; \
-		GOARCH=amd64 GOOS=darwin go build -o build_temp_mac; \
+		GOARCH=amd64 GOOS=darwin go build -o hops; \
 	fi
 
 # Step 2: Copy binaries and create .deb packages for each architecture
@@ -40,7 +40,7 @@ deb:
 	mkdir -p $(DEBIAN_DIR) $(BINARY_DIR)
 
 	# Copy binary to build folder
-	cp build_temp_$(ARCH) $(BINARY_DIR)/$(PACKAGE_NAME)
+	cp hops_$(ARCH) $(BINARY_DIR)/$(PACKAGE_NAME)
 
 	# Create control file with Version field
 	@echo "Creating control file for $(ARCH)..."
@@ -53,7 +53,6 @@ deb:
 # Step 4: Clean up binaries and build folders
 clean:
 	@echo "Cleaning up..."
-	rm -rf build_temp_* $(BUILD_DIR)
 	rm -rf hops_* $(BUILD_DIR)
 
 .PHONY: all build deb debs clean

@@ -8,6 +8,7 @@ import (
 // Renderer interface defines the methods required for rendering templates.
 type Renderer interface {
 	Render(content []byte) ([]byte, error)
+	GetRenderer() template.FuncMap
 }
 
 // DefaultRenderer is the default implementation of the Renderer interface.
@@ -19,13 +20,17 @@ type DefaultRenderer struct {
 func NewRenderer() Renderer {
 	r := &DefaultRenderer{
 		funcMap: template.FuncMap{
-			"os":       func() *osInfo { return newOSInfo() },
+			"os":       func() *OsInfo { return newOSInfo() },
 			"hardware": func() *HardwareInfo { return NewHardwareInfo() },
 			"network":  func() *NetworkInfo { return NewNetworkInfo() },
 			"user":     func() *UserInfo { return NewUserInfo() },
 		},
 	}
 	return r
+}
+
+func (r *DefaultRenderer) GetRenderer() template.FuncMap {
+	return r.funcMap
 }
 
 // Render applies all registered functions and renders the template.

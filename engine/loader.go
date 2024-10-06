@@ -11,7 +11,7 @@ import (
 )
 
 // LoadPath loads Lua functions, variables, and comments from a directory
-func LoadPath(fs embed.FS, folder string) {
+func LoadPath(fs embed.FS, folder string) error {
 	l := lua.NewState()
 	defer l.Close()
 
@@ -40,22 +40,25 @@ func LoadPath(fs embed.FS, folder string) {
 			filePath := filepath.Join(folder, file.Name())
 
 			// Collect comments and variables from Lua file and update metadata
-			collectLuaMetadata(filePath, &meta)
+			collectLuaMetadata(&fs, filePath, &meta)
 
 			// Read the content of the Lua file
 			content, err := fs.ReadFile(filePath)
 			if err != nil {
 				log.Fatalf("Error reading %s: %v\n", filePath, err)
+				return err
 			}
 			// Render content of file , eg replace place holders , this does not compile lua
 			rendered_content, err := r.Render(content)
 			if err != nil {
 				log.Fatalf("Error rendering %s: %v\n", filePath, err)
+				return err
 			}
 
 			// Run the Lua script from the file content
 			if err := l.DoString(string(rendered_content)); err != nil {
 				log.Fatalf("Error loading %s: %v\n", filePath, err)
+				return err
 			}
 
 			// Get the table returned by the Lua script
@@ -75,4 +78,5 @@ func LoadPath(fs embed.FS, folder string) {
 
 	// After processing all files, update the global luaMetaMap for this folder
 	LuaMetaMap[folder] = meta
+	return nil
 }

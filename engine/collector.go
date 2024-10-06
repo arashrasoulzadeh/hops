@@ -2,15 +2,15 @@ package engine
 
 import (
 	"bufio"
+	"embed"
 	"log"
-	"os"
 	"regexp"
 	"strings"
 )
 
 // collectLuaMetadata parses Lua files for comments and variables
-func collectLuaMetadata(filePath string, metadata *LuaMetadata) {
-	file, err := os.Open(filePath)
+func collectLuaMetadata(fs *embed.FS, filePath string, metadata *LuaMetadata) {
+	file, err := fs.Open(filePath)
 	if err != nil {
 		log.Fatalf("Error opening file: %v\n", err)
 	}

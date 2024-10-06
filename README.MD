@@ -23,7 +23,7 @@ Clone the repository and run the `run` command with your Lua script and function
 ```bash
 git clone <repo-url>
 cd <repo-folder>
-go run . run module_name module_function
+go run . module_name module_function
 ```
 
 ## Usage
@@ -54,7 +54,7 @@ go run . run module_name module_function
    Use the package’s command-line interface to load the Lua module and execute the desired function:
 
    ```bash
-   go run . run modules/nginx restart
+   go run .  nginx restart
    ```
 
    This will execute the `restart` function from the `modules/nginx/nginx.lua` file.
@@ -62,7 +62,7 @@ go run . run module_name module_function
 ## Example
 
 ```bash
-go run . run modules/nginx restart
+go run . nginx restart
 ```
 
 This command will load the Lua file `modules/nginx/nginx.lua` and execute the `restart` function to restart the Nginx

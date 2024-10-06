@@ -7,20 +7,20 @@ import (
 )
 
 // osInfo provides information about the OS.
-type osInfo struct{}
+type OsInfo struct{}
 
 // newOSInfo returns an instance of osInfo.
-func newOSInfo() *osInfo {
-	return &osInfo{}
+func newOSInfo() *OsInfo {
+	return &OsInfo{}
 }
 
 // Name returns the current operating system name.
-func (o *osInfo) Name() string {
+func (o *OsInfo) Name() string {
 	return runtime.GOOS
 }
 
 // Version returns the current OS version.
-func (o *osInfo) Version() string {
+func (o *OsInfo) Version() string {
 	switch runtime.GOOS {
 	case "windows":
 		return windowsVersion()

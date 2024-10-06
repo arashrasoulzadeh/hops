@@ -14,13 +14,20 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-//go:embed modules
+//go:embed modules/**/*.lua
 var fs embed.FS
 
 func main() {
-	engine.LoadPath(fs, "modules/intro")
-	engine.LoadPath(fs, "modules/nginx")
-	engine.LoadPath(fs, "modules/os")
+	// Load Lua paths from the embedded filesystem
+	if err := engine.LoadPath(fs, "modules/intro"); err != nil {
+		fmt.Println("Error loading modules/intro:", err)
+	}
+	if err := engine.LoadPath(fs, "modules/nginx"); err != nil {
+		fmt.Println("Error loading modules/nginx:", err)
+	}
+	if err := engine.LoadPath(fs, "modules/os"); err != nil {
+		fmt.Println("Error loading modules/os:", err)
+	}
 
 	// Print collected metadata (functions, comments, variables)
 	totalFunctions := 0
@@ -48,5 +55,6 @@ func main() {
 
 	zap.L().Debug(fmt.Sprintf("loaded %d modules and %d functions", len(engine.LuaMetaMap), totalFunctions))
 
+	// Execute the root command
 	cmd.Execute()
 }
