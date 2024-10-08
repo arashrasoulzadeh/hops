@@ -8,7 +8,9 @@ import (
 	"fmt"
 	"hops/cmd"
 	"hops/engine"
+	"log"
 	"os"
+	"path/filepath"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -19,14 +21,9 @@ var fs embed.FS
 
 func main() {
 	// Load Lua paths from the embedded filesystem
-	if err := engine.LoadPath(fs, "modules/intro"); err != nil {
-		fmt.Println("Error loading modules/intro:", err)
-	}
-	if err := engine.LoadPath(fs, "modules/nginx"); err != nil {
-		fmt.Println("Error loading modules/nginx:", err)
-	}
-	if err := engine.LoadPath(fs, "modules/os"); err != nil {
-		fmt.Println("Error loading modules/os:", err)
+	err := loadAllModules(fs, "modules")
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	// Print collected metadata (functions, comments, variables)
@@ -57,4 +54,32 @@ func main() {
 
 	// Execute the root command
 	cmd.Execute()
+}
+
+func loadAllModules(fs embed.FS, modulesDir string) error {
+
+	// Walk through the modules directory
+	err := filepath.Walk(modulesDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		// Only process directories (skip files)
+		if info.IsDir() {
+			if path != modulesDir {
+				// Load the Lua path for the current module (directory)
+				if loadErr := engine.LoadPath(fs, path); loadErr != nil {
+					fmt.Printf("Error loading module %s: %v\n", path, loadErr)
+				}
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return fmt.Errorf("error walking through modules directory: %w", err)
+	}
+
+	return nil
 }

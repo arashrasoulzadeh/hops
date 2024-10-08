@@ -61,6 +61,7 @@ var rootCmd = &cobra.Command{
 		functionName := args[1]
 
 		// Check if the function exists within the module
+
 		f, ok := pkg[functionName]
 		if !ok {
 			cmd.Printf("Error: function '%s' not found in module '%s'.\n", functionName, moduleName)
@@ -68,13 +69,23 @@ var rootCmd = &cobra.Command{
 		}
 
 		// Create a Lua value for the function argument
-		a1 := lua.LString("arash") // Modify this based on your use case
+		argsToPass := make([]lua.LValue, len(meta.Variables[functionName]))
 
+		// Loop through the variables for the function and map arguments (or prompt if not enough args)
+		for i, k := range meta.Variables[functionName] {
+			// If an argument exists (i.e., i + 2 is within bounds of args), use it; otherwise, prompt the user
+			if len(args) > i+2 {
+				argsToPass[i] = lua.LString(args[i+2])
+			} else {
+				// If not enough arguments are passed, prompt the user interactively using Scan
+				argsToPass[i] = lua.LString(engine.Scan(cmd, args, k))
+			}
+		}
 		// Define execution loop based on the 'watch' flag
 		for {
 
 			// Execute the function
-			response, err := engine.ExecuteFunction(f, a1)
+			response, err := engine.ExecuteFunction(f, argsToPass...)
 			if err != nil {
 				cmd.PrintErrf("Error executing function: %v\n", err)
 			}

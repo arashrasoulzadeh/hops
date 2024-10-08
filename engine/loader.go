@@ -21,7 +21,7 @@ func LoadPath(fs embed.FS, folder string) error {
 	// Initialize metadata for the folder
 	meta := LuaMetadata{
 		Functions: make(map[string]string),
-		Variables: make(map[string]string),
+		Variables: make(map[string][]string),
 		Comments:  make(map[string]string),
 	}
 
