@@ -52,8 +52,13 @@ var rootCmd = &cobra.Command{
 		// If the function name is not provided, list available functions
 		if len(args) == 1 {
 			cmd.Printf("Usage:\nhops %s [command]\n\nAvailable Commands:\n", moduleName)
+
+			// Define the width for the command and description
+			const commandWidth = 25
+
 			for functionName := range pkg {
-				cmd.Println(meta.Functions[functionName] + "\t\t" + meta.Comments[functionName])
+				// Format the output to align the command and description
+				cmd.Printf("%-*s\t%s\n", commandWidth, meta.Functions[functionName], meta.Comments[functionName])
 			}
 			return
 		}
