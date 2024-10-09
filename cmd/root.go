@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"hops/engine"
 	"os"
 	"os/exec"
@@ -74,7 +73,6 @@ var rootCmd = &cobra.Command{
 		variables, hasVariables := meta.Variables[functionName]
 
 		if hasVariables && len(variables) > 0 && variables[0] != "" {
-			fmt.Println("here", variables, len(variables), functionName)
 			// Loop through the variables for the function and map arguments (or prompt if not enough args)
 			for i, k := range variables {
 				// If an argument exists (i.e., i + 2 is within bounds of args), use it; otherwise, prompt the user
