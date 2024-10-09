@@ -21,7 +21,8 @@ var fs embed.FS
 
 func main() {
 	// Load Lua paths from the embedded filesystem
-	err := loadAllModules(fs, "modules")
+	args := os.Args
+	err := loadAllModules(args[1], fs, "modules")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,7 +57,7 @@ func main() {
 	cmd.Execute()
 }
 
-func loadAllModules(fs embed.FS, modulesDir string) error {
+func loadAllModules(module string, fs embed.FS, modulesDir string) error {
 
 	// Walk through the modules directory
 	err := filepath.Walk(modulesDir, func(path string, info os.FileInfo, err error) error {
@@ -66,7 +67,7 @@ func loadAllModules(fs embed.FS, modulesDir string) error {
 
 		// Only process directories (skip files)
 		if info.IsDir() {
-			if path != modulesDir {
+			if path != modulesDir && path == "modules/"+module {
 				// Load the Lua path for the current module (directory)
 				if loadErr := engine.LoadPath(fs, path); loadErr != nil {
 					fmt.Printf("Error loading module %s: %v\n", path, loadErr)

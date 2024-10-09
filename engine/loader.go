@@ -49,14 +49,14 @@ func LoadPath(fs embed.FS, folder string) error {
 				return err
 			}
 			// Render content of file , eg replace place holders , this does not compile lua
-			rendered_content, err := r.Render(content)
+			renderedContent, err := r.Render(content)
 			if err != nil {
 				log.Fatalf("Error rendering %s: %v\n", filePath, err)
 				return err
 			}
 
 			// Run the Lua script from the file content
-			if err := l.DoString(string(rendered_content)); err != nil {
+			if err := l.DoString(string(renderedContent)); err != nil {
 				log.Fatalf("Error loading %s: %v\n", filePath, err)
 				return err
 			}
